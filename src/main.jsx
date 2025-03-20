@@ -8,7 +8,9 @@ import LandingPage from "./components/LandingPage.jsx";
 import User from "./components/Users/User.jsx";
 import Order from "./components/Order/Order.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Import ProtectedRoute
-
+import { Provider } from "react-redux";
+import store from "./store/index.js";
+import CreateRestaurant from "./components/Restaurant/CreateRestaurant.jsx";
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   {
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
             <Order />
           </ProtectedRoute>
         ) 
+      },
+      { 
+        path: "/dashboard//create-restaurant", 
+        element: (
+          <ProtectedRoute>
+            <CreateRestaurant/>
+          </ProtectedRoute>
+        ) 
       }
     ],
   },
@@ -49,6 +59,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+      <Provider store={store}>
     <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );
+
+
+

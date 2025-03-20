@@ -1,38 +1,21 @@
 import React, { useEffect, useState } from "react";
-import api from "../../api/api";
 import ReactPaginate from "react-paginate";
 import {FaSearch } from "react-icons/fa";
 import UserTable from "./UserTable";
+import { useSelector,useDispatch } from "react-redux";
+import { handleAllUsers } from "../../slice/userSlice";
 function User() {
-  const [customers, setCustomers] = useState([]);
-  const [error, setError] = useState("");
-  const [totalPages, setTotalPages] = useState(0);
-  const [perPage] = useState(10);
+  const dispatch = useDispatch()
+  const { users, totalPages, error,loading } = useSelector((state) => state.users);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  async function handleCustomers(currentPage = 1, searchQuery = "") {
-    const queryParam = searchQuery
-      ? `&search=${encodeURIComponent(searchQuery.trim())}`
-      : "";
-    const page_number = queryParam.length === 0 ? currentPage : 1;
-    const response = await api
-      .get(
-        `/customer_users?per_page=${perPage}&page=${page_number}${queryParam}`
-      )
-      .then((response) => {
-        setCustomers(response.data.customer_users);
-        setTotalPages(response?.data?.details?.total_pages);
-      })
-      .catch((err) => {
-        setError(err.response?.data?.message || "An error occurred.");
-      });
-  }
-
   useEffect(() => {
-    handleCustomers(currentPage, searchQuery);
-  }, [currentPage, searchQuery]);
+    console.log("Dispatching handleAllUsers...");
+    dispatch(handleAllUsers({ searchQuery, page: currentPage }))
+  }, [currentPage, searchQuery, dispatch]);
 
+  
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
   };
@@ -60,14 +43,18 @@ function User() {
 
           {/* Search Button */}
           <button
-            onClick={() => handleCustomers(1, searchQuery)}
+            onClick={() => handleAllUsers(1, searchQuery)}
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
           >
             Search
           </button>
         </div>
-      <UserTable customers={customers}/>
-        {/* Pagination */}
+  {/* ✅ Show Loading State Before Rendering UserTable */}
+        {loading ? (
+          <p className="text-gray-500">Loading users...</p> // ✅ Show loading text
+        ) : (
+          <UserTable users={users} />
+        )}        {/* Pagination */}
       </div>
       <div className="flex justify-center mt-4">
         <ReactPaginate

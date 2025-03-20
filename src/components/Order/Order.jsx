@@ -3,36 +3,20 @@ import api from "../../api/api";
 import ReactPaginate from "react-paginate";
 import OrderTable from "./OrderTable";
 import { FaSearch } from "react-icons/fa";
+import { useDispatch,useSelector } from "react-redux";
+import { handleAllOrders } from "../../slice/transactionSlice";
 function Order() {
-  const [orders, setOrders] = useState([]);
-  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const dispatch = useDispatch();
+  const { transactions, loading, error, totalPages } = useSelector((state) => state.transactions);
 
-  async function handleAllOrders(searchQuery = "",page = 1) {
-    try {
-      const queryParam = searchQuery
-        ? `&search=${encodeURIComponent(searchQuery)}`
-        : "";
-      const page_number = queryParam.length === 0 ? page : 1
-      const response = await api.get(
-        `/orders?page=${page_number}&per_page=${perPage}${queryParam}`
-      );
-
-      setOrders(response.data.transaction);
-      setTotalPages(response.data.details.total_pages || 1);
-    } catch (err) {
-      setError(
-        err.response?.data?.status || "An error occurred. Please try again."
-      );
-    }
-  }
 
   useEffect(() => {
-   handleAllOrders(searchQuery,currentPage)
-  }, [searchQuery,currentPage]);
+    dispatch(handleAllOrders({ searchQuery, page: currentPage, perPage }));
+ }, [dispatch, searchQuery, perPage, currentPage]);
+ 
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
@@ -62,7 +46,7 @@ function Order() {
         </button>
       </div>
       {/* Table */}
-      <OrderTable  perPage={perPage} orders={orders} />
+      <OrderTable  perPage={perPage} orders={transactions} />
       {/* Pagination */}
       <div className="flex justify-center mt-4">
         <ReactPaginate

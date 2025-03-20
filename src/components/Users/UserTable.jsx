@@ -3,7 +3,8 @@ import { FaUserCircle, FaAngleRight } from "react-icons/fa";
 import api from "../../api/api";
 import EditUser from "./EditUser";
 
-function UserTable({ customers }) {
+function UserTable({ users }) {
+
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const showCustomerDetails = async (customer) => {
@@ -15,11 +16,16 @@ function UserTable({ customers }) {
     }
   };
 
+  if (!users || !Array.isArray(users)) {
+    console.log(`customers1 ${users}`)
+    return <p className="text-gray-500">No users found</p>;
+  }
   return (
+    
     <div className="relative flex w-full">
       {/* Table Content */}
       <div className={`w-full ${selectedCustomer ? "pr-96" : ""} space-y-4`}>
-        {customers.map((customer) => (
+        {users.map((customer) => (
           <div
             key={customer.id}
             className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 transition hover:bg-gray-50"

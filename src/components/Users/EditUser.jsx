@@ -91,23 +91,23 @@ function EditUser({ customer, onClose }) {
           </h3>
           <p className="flex items-center gap-2">
             <FaRoad className="text-gray-500" /> <strong>Street:</strong>{" "}
-            {customer.addresses[0].street}
+            {customer.addresses[0]?.street}
           </p>
           <p className="flex items-center gap-2">
             <FaMap className="text-gray-500" /> <strong>State:</strong>{" "}
-            {customer.addresses[0].state}
+            {customer.addresses[0]?.state}
           </p>
           <p className="flex items-center gap-2">
             <FaEnvelopeOpenText className="text-gray-500" />{" "}
-            <strong>Zip code:</strong> {customer.addresses[0].zip_code}
+            <strong>Zip code:</strong> {customer.addresses[0]?.zip_code}
           </p>
           <p className="flex items-center gap-2">
             <FaHome className="text-gray-500" /> <strong>Address 1:</strong>{" "}
-            {customer.addresses[0].address1}
+            {customer.addresses[0]?.address1}
           </p>
           <p className="flex items-center gap-2">
             <FaCity className="text-gray-500" /> <strong>City:</strong>{" "}
-            {customer.addresses[0].city}
+            {customer.addresses[0]?.city}
           </p>
         </div>
 
