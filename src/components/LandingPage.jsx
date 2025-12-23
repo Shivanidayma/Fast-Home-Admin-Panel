@@ -33,6 +33,7 @@ function LandingPage() {
 
   useEffect((() => {
     const auth_token = localStorage.getItem("auth_token")
+    console.log(auth_token)
     auth_token ? navigate('/dashboard') : ""
   }),[])
   return (
@@ -50,6 +51,7 @@ function LandingPage() {
               type="email"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
             />

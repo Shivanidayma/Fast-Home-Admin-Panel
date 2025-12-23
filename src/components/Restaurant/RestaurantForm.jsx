@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
 import api from "../../api/api";
+import { List, ListItem, ListItemText, IconButton } from "@mui/material";
 import {
   FormControl,
   FormLabel,
@@ -20,9 +21,19 @@ const styles = {
   },
 };
 
-function RestaurantForm() {
+function RestaurantForm({selectedDocuments,setSelectedDocuments}) {
   const { register } = useFormContext();
   const [imagePreview, setImagePreview] = useState(null);
+
+  const handleDocumentChange = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedDocuments((prevFiles) => [...prevFiles, ...files]);
+  };
+
+  const handleRemoveFile = (index) => {
+    setSelectedDocuments((prevDocs) => prevDocs.filter((_, i) => i !== index));
+  };
+
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -93,7 +104,6 @@ function RestaurantForm() {
             type="button"
             className="px-4 py-2 text-black rounded-md hover:bg-black-600 transition"
             onClick={() => document.getElementById("profileImage").click()}
-
           >
             Add Profile Image
           </button>
@@ -160,9 +170,82 @@ function RestaurantForm() {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-      
-</Grid>
-
+          <Grid item xs={12} sm={8} md={6}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ fontWeight: "bold", color: "#000", mb: 1 }}>
+                Upload Document
+              </FormLabel>
+              <input
+                type="file"
+                id="documentUpload"
+                hidden
+                accept="application/pdf, image/*"
+                onChange={handleDocumentChange}
+              />
+              <label htmlFor="documentUpload">
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{
+                    backgroundColor: "#f0f0f0",
+                    borderRadius: "8px",
+                    padding: "10px 12px",
+                    cursor: "pointer",
+                    transition: "background 0.3s",
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                  }}
+                >
+                  <Typography sx={{ color: "#555" }}>
+                    Add Document +{" "}
+                  </Typography>
+                </Grid>
+              </label>
+              {selectedDocuments.length > 0 && (
+                <List>
+                  {selectedDocuments.length > 0 && (
+                    <List
+                      sx={{
+                        mt: 2,
+                        width: "100%",
+                        maxHeight: "150px",
+                        overflowY: "auto",
+                      }}
+                    >
+                      {selectedDocuments.map((file, index) => (
+                        <ListItem
+                          key={index}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          <ListItemText
+                            primary={file.name}
+                            sx={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              maxWidth: "80%", // Prevents text overflow
+                            }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => handleRemoveFile(index)}
+                            sx={{ color: "red" }}
+                          >
+                            ❌
+                          </IconButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </List>
+              )}
+            </FormControl>
+          </Grid>
+        </Grid>
 
         {/* Address Fields */}
         <Grid container spacing={2}>
@@ -205,8 +288,7 @@ function RestaurantForm() {
               label="Street"
               name="restaurant_admin.restaurant.restaurant_address.street"
               register={register}
-            />
-            ={" "}
+            />{" "}
           </Grid>
           <Grid item xs={6}>
             <CustomTextField

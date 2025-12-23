@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Route, RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
-import OrderStatus from "./components/Dashboard/OrderStatus.jsx";
+import OrderStatus from "./components/OrderStatus/OrderStatus.jsx";
 import LandingPage from "./components/LandingPage.jsx"; 
 import User from "./components/Users/User.jsx";
 import Order from "./components/Order/Order.jsx";
@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Import Protecte
 import { Provider } from "react-redux";
 import store from "./store/index.js";
 import CreateRestaurant from "./components/Restaurant/CreateRestaurant.jsx";
+import DashboardItem from "./components/Dashboard/DashboardItem.jsx";
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   {
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CreateRestaurant/>
+          </ProtectedRoute>
+        ) 
+      },
+      { 
+        path: "/dashboard/", 
+        element: (
+          <ProtectedRoute>
+            <DashboardItem/>
           </ProtectedRoute>
         ) 
       }

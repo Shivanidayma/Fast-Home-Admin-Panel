@@ -2,7 +2,6 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { HomeIcon, ClipboardCheckIcon, CurrencyDollarIcon, UsersIcon, PlusCircleIcon, TruckIcon, ChartBarIcon } from '@heroicons/react/outline'
 import { HiHome } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/api';
 const Dashboard = () => {
 
   const navigate = useNavigate()

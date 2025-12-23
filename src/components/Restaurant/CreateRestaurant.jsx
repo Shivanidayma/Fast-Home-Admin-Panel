@@ -3,9 +3,14 @@ import { Button, Grid, Typography, Paper,} from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import RestaurantForm from "./RestaurantForm";
 import RestaurantMarginForm from "./RestaurantMarginForm";
-import api from "../../api/api";
+import { useSelector,useDispatch } from "react-redux";
+import { useState } from "react";
+import { handleRestaurantCreation } from "../../slice/createRestaurantSlice";
+import { Database } from "lucide-react";
 
 const CreateRestaurant = () => {
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
+  const dispatch = useDispatch()
   const methods = useForm({
     defaultValues: {
       restaurant_admin: {
@@ -47,14 +52,7 @@ const CreateRestaurant = () => {
 
   const { handleSubmit } = methods; 
   const onSubmit = async (data) => {
-    try {
-      console.log(data)
-      const response = await api.post("/restaurants", data);
-      console.log("Success:", response.data);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to create restaurant. Please try again.");
-    }
+    dispatch(handleRestaurantCreation({ data, selectedDocuments }));
   };
 
   const styles = {
@@ -90,10 +88,9 @@ const CreateRestaurant = () => {
         <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
           <Grid container spacing={2} style={{ flexGrow: 1, overflow: "hidden" }}>
             {/* Left Section - Restaurant Info */}
-            <RestaurantForm/>
+            <RestaurantForm selectedDocuments={selectedDocuments} setSelectedDocuments={setSelectedDocuments} />
             {/* Right Section - Margins & Timings */}
-            <RestaurantMarginForm/>
-          
+            <RestaurantMarginForm />
           </Grid>
 
           {/* Buttons */}
